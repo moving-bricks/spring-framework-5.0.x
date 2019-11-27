@@ -225,10 +225,11 @@ public class AnnotatedBeanDefinitionReader {
 	<T> void doRegisterBean(Class<T> annotatedClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 		/**
-		 * 根据指定的bean创建一个AnnotatedGenericBeanDefinition
+		 * 根据指定的bean创建一个BeanDefinition的子类AnnotatedGenericBeanDefinition
 		 * 这个AnnotatedGenericBeanDefinition可以理解为一个数据结构
 		 * AnnotatedGenericBeanDefinition包含了类的其他信息,比如一些元信息
 		 * scope，lazy等等
+		 *
 		 */
 
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
@@ -250,7 +251,7 @@ public class AnnotatedBeanDefinitionReader {
 		 */
 		abd.setScope(scopeMetadata.getScopeName());
 		/**
-		 * 生成类的名字通过beanNameGenerator记得布置过一个作业
+		 * 生成类的名字通过beanNameGenerator
 		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 		/**
@@ -264,7 +265,7 @@ public class AnnotatedBeanDefinitionReader {
 
 		/**
 		 * 如果在向容器注册注解Bean定义时，使用了额外的限定符注解则解析
-		 * 关于Qualifier和Primary前面的课当中讲过，主要涉及到spring的自动装配
+		 * Qualifier和Primary，主要涉及到spring的自动装配
 		 * 这里需要注意的
 		 * byName和qualifiers这个变量是Annotation类型的数组，里面存不仅仅是Qualifier注解
 		 * 理论上里面里面存的是一切注解，所以可以看到下面的代码spring去循环了这个数组
@@ -305,8 +306,8 @@ public class AnnotatedBeanDefinitionReader {
 
 		/**
 		 * 把上述的这个数据结构注册给registry
-		 * registy就是AnnotatonConfigApplicationContext
-		 * AnnotatonConfigApplicationContext在初始化的時候通過調用父類的構造方法
+		 * registy就是AnnotationConfigApplicationContext
+		 * AnnotationConfigApplicationContext在初始化的時候通過調用父類的構造方法
 		 * 實例化了一个DefaultListableBeanFactory
 		 * *registerBeanDefinition里面就是把definitionHolder这个数据结构包含的信息注册到
 		 * DefaultListableBeanFactory这个工厂
