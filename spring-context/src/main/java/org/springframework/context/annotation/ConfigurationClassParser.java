@@ -226,7 +226,6 @@ class ConfigurationClassParser {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
-
 		// 处理Imported 的情况
 		//就是当前这个注解类有没有被别的类import
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
@@ -246,9 +245,10 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// Recursively process the configuration class and its superclass hierarchy.
+		// 递归地处理配置类及其超类层次结构。
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			//解析注解并扫描
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -272,7 +272,7 @@ class ConfigurationClassParser {
 		//处理内部类
 		processMemberClasses(configClass, sourceClass);
 
-		// Process any @PropertySource annotations
+		// 处理@PropertySource注释
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class,
 				org.springframework.context.annotation.PropertySource.class)) {
@@ -285,7 +285,7 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// Process any @ComponentScan annotations
+		// 处理@ComponentScan注释
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
 		if (!componentScans.isEmpty() &&
@@ -304,7 +304,7 @@ class ConfigurationClassParser {
 					if (bdCand == null) {
 						bdCand = holder.getBeanDefinition();
 					}
-					//检查  todo
+					//检查
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
 						parse(bdCand.getBeanClassName(), holder.getBeanName());
 					}
@@ -316,8 +316,9 @@ class ConfigurationClassParser {
 		 * 上面的代码就是扫描普通类----@Component
 		 * 并且放到了map当中
 		 */
-		// Process any @Import annotations
-		//处理@Import  imports 3种情况
+
+
+		//下面是处理@Import  imports 3种情况
 		//ImportSelector
 		//普通类
 		//ImportBeanDefinitionRegistrar
@@ -332,7 +333,7 @@ class ConfigurationClassParser {
 		 *
 		 * 判断一组类是不是imports（3种import）
 		 *
-		 *
+		 *代码就不贴了,不是咱们这次研究的重点
 		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 

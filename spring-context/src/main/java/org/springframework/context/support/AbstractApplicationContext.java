@@ -715,13 +715,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
-		//这个地方需要注意getBeanFactoryPostProcessors()是获取手动给spring的BeanFactoryPostProcessor
-		//自定义并不仅仅是程序员自己写的
-		//自己写的可以加companent也可以不加
-		//如果加了getBeanFactoryPostProcessors()这个地方得不得，是spring自己扫描的
-		//为什么得不到getBeanFactoryPostProcessors（）这个方法是直接获取一个list，
-		//这个list是在AnnotationConfigApplicationContext被定义
-		//所谓的自定义的就是你手动调用AnnotationConfigApplicationContext.addBeanFactoryPostProcesor();
+		//这里的getBeanFactoryPostProcessors()是获取手动给spring的BeanFactoryPostProcessors()
+		//何为手动给spring --> 手动调用AnnotationConfigApplicationContext.addBeanFactoryPostProcessor();
+		//所以说自定义的BeanFactoryPostProcessors并非只有implements BeanFactoryPostProcessors才叫自定义
+		//我们并没有手动去调用所以getBeanFactoryPostProcessors()的size = 0
+
+		//这里问: 那如果我们自己去implements BeanFactoryPostProcessors 那getBeanFactoryPostProcessors()的size还会不会是0?
+		//回答:  还是0! 因为我们自己implements BeanFactoryPostProcessors必须要加@Component,但是直到现在为止spring并没有开始扫描@Component
+		//所以还是0
 
 
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
